@@ -1,0 +1,244 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>We Know</title>
+
+	<link rel="stylesheet" href="/css/materialize.min.css" />
+
+</head>
+<body class="row light-green lighten-4">
+
+	<!--<div id="chat"></div>
+	<form id="sendmessage">
+		<input size="35" id="message" >
+		<input type="submit" >
+	</form>-->
+
+    <div style="display:inline;" id="mainPage">
+        <div class="col s12 light-green lighten-2" style="height:3vh;"></div>
+
+        <div style="display:inline;" id="navbar">
+            <div class="col s12 light-green lighten-2"  style="height:7.5vh;">
+                <btn class="btn col s3 light-green lighten-3 modal-trigger" href="#settingModal"><b>Setting</b></btn>
+                <div class="col s6 center-align" style="color:white; font-size:2em;"><b>We Know</b></div>
+                <btn class="btn col s3 light-green lighten-3 modal-trigger" href="#addModal"><b>Add</b></btn>
+            </div>
+        </div>
+        <div class="col s12 light-green lighten-3" style="height:3vh;">
+            <div class="col s6 left-align" id="myName" style="color:white;"></div>
+            <div class="col s6 right-align" id="myPoints" style="color:white;"></div>
+
+        </div>
+
+        <!--padding for the bar-->
+        <div class="col s12" style="height:2vh;"></div>
+
+
+        <!--mainBody One-->
+        <div class="col s12" style="min-height:1vh; width:100vw;">
+            <!--where the tabs appear-->
+            <div id="tabs" style="overflow-y: auto; "></div>
+        </div>
+        <btn class="btn col s3 light-green lighten-3" style="position:fixed; bottom:10vh;" href="#settingModal"><b>Setting</b></btn>
+
+        <div class="col s12" style="position:fixed; bottom:1vh"  id="footer">
+            <div class="col s12 light-green center-align modal-trigger" id="pickGrade" href="#GradeModal" style="height:3vh; color:white;">
+                Pick grade levels to help
+            </div>
+            <div class="col s4 light-green lighten-1 center-align" id="showfront" style="height:5vh; color:white;">
+                Show recent 20
+            </div>
+            <div class="col s4 light-green lighten-2 center-align" id="showback" style="height:5vh; color:white;">
+                Show Prev 20
+            </div>
+            <div class="col s4 light-green lighten-3 center-align" id="backtoFrontPage" style="height:5vh; color:white;">
+                Go to top
+            </div>
+        </div>
+    </div>
+    <div style="display:none;" id="commentPage">
+        <div class="col s12 light-green lighten-2" style="height:3vh;"></div>
+
+        <!--navBar-->
+        <div style="display:inline;" id="navbar">
+            <div class="col s12 light-green lighten-2" style="height:7.5vh;">
+                <btn class="btn col s3 light-green lighten-3" id="Back"><b>Back</b></btn>
+                <div class="col s6 center-align" style="color:white; font-size:2em;"><b>App Name</b></div>
+                <btn class="btn col s3 light-green lighten-3 modal-trigger" href="#ResponseModel"><b>Add</b></btn>
+            </div>
+        </div>
+
+        <!--padding for the bar-->
+        <div class="col s12" style="height:2vh;"></div>
+
+        <div class="col s12 light-green lighten-3" style="height:30vh;">
+        
+            <textarea disabled class="col s12 left-align" id="responseText" style="resize: none;color:white;overflow: auto; height: 30vh; border: none; font-size:1.5em;">this is where the text goes</textarea>
+        
+        </div>
+ 
+        <div class="col s12" style="height:2vh;"></div>
+
+        <!--mainBody One-->
+        <div class="col s12" style="min-height:1vh; width:100vw;">
+            <!--where the tabs appear-->
+            <div id="responsetabs" style="overflow-y: auto; "></div>
+        </div>
+
+    </div>
+
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/js/materialize.min.js"></script>
+	<script type="text/javascript" src="/js/index.js"></script>
+
+	<script type="text/javascript">
+		
+		$( document ).ready(function() {
+
+
+
+			var socket = io.connect();
+			var $messageForm = $("#sendmessage");
+			var $messageBox = $("#message");
+			var $chat = $("#chat");
+
+			$messageForm.submit(function(e){
+				e.preventDefault();
+				//this sends to the server and send message is the tag name
+				socket.emit('send message',$messageBox.val());
+				$messageBox.val('');
+			})
+			//this recieves the message that the server sends
+			socket.on('new message', function(data){
+				$chat.append(data+ "</br>")
+			})
+    		console.log( "ready!" );
+		});
+
+	</script>
+	<!-- Add Modal to the main page -->
+    <div id="addModal" class="modal ">
+        <div class="modal-content">
+
+
+            <div class="center-align col s12" style="font-size:1.5em; color:darkgray;">Comment</div>
+            <textarea id="commentTextArea" class="materialize-textarea col s12" placeholder="Enter Comment"></textarea>
+            <div class="col s12" style="height:1vh;"></div>
+
+            <btn class="btn col s12 light-green lighten-3" id="createComment" style="background-color:#B8FB85;"><b>Enter</b></btn>
+            <div class="col s12" style="height:1vh;"></div>
+
+            <div class="col s12 center-align" id="errormsgComment" style="color:red;"></div>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-green btn-flat col s12 center-align">close</a>
+        </div>
+    </div>
+    <!-- Add Modal to the main page -->
+    <div id="ResponseModel" class="modal ">
+        <div class="modal-content">
+
+
+            <div class="center-align col s12" style="font-size:1.5em; color:darkgray;">Response</div>
+            <textarea id="ResponseTextArea" class="materialize-textarea col s12" placeholder="Enter Comment"></textarea>
+            <div class="col s12" style="height:1vh;"></div>
+
+            <btn class="btn col s12 light-green lighten-3" id="createResponse" style="background-color:#B8FB85;"><b>Enter</b></btn>
+            <div class="col s12" style="height:1vh;"></div>
+
+            <div class="col s12 center-align" id="errormsgResponse" style="color:red;"></div>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-green btn-flat col s12 center-align">close</a>
+        </div>
+    </div>
+	<!-- setting Modal to the main page -->
+	<div id="settingModal" class="modal">
+		<div class="modal-content light-green lighten-3 row">
+
+                <btn class="btn col s12 light-green lighten-1 modal-trigger" href="#signinModal"><b>Sign In</b></btn>
+                <btn class="btn col s12 light-green lighten-1" id="#Log_Out"><b>Log Out</b></btn>
+                <div class="col s12" style="height:5vh;"></div>
+                <btn class="btn col s12 light-green lighten-1 modal-trigger" href="#signupModal"><b>Sign Up</b></btn>
+
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close btn-flat col s12 center-align">close</a>
+		</div>
+    </div>
+    <!-- Pick Grade modal Modal to the main page -->
+    <div id="GradeModal" class="modal ">
+        <div class="modal-content">
+
+            <div style="display:inline;" id="gradeview">
+                <div class="col s12 center-align" style="font-size:1.5em; color:darkgray;"><b>Select Grades</b></div>
+
+                <btn class="btn col s3 light-green lighten-3 g1" id="1"><b>1st</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="2"><b>2nd</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="3"><b>3rd</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="4"><b>4th</b></btn>
+
+                <btn class="btn col s3 light-green lighten-3 g1" id="5"><b>5th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="6"><b>6th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="7"><b>7th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="8"><b>8th</b></btn>
+
+                <btn class="btn col s3 light-green lighten-3 g1" id="9"><b>9th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="10"><b>10th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="11"><b>11th</b></btn>
+                <btn class="btn col s3 light-green lighten-3 g1" id="12"><b>12th</b></btn>
+
+                <div class="col s12" style="height:4vh;"></div>
+                <div class="col s12 center-align" id="errormsgGrade" style="color:red;"></div>
+                <btn class="btn col s12 light-green lighten-3" id="selectGrade" style="background-color:#B8FB85;"><b>Enter</b></btn>
+
+            </div>
+            <div style="display:none" id="generalView">
+                <btn class="btn col s12 light-green lighten-3" id="changeView" style="background-color:#B8FB85;"><b>Change view</b></btn>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-green btn-flat col s12 center-align">close</a>
+        </div>
+    </div>
+	<!-- SignUp Modal to the main page -->
+	<div id="signupModal" class="modal">
+		<div class="modal-content row">
+
+		<div class="col s12 center-align" style="font-size:1.5em; color:darkgray;"><b>Sign Up</b></div>
+            <input id="regUser" class="textbox col s12 center-align" placeholder="Username" type="text">
+            <input id="regPass1" class="textbox col s12 center-align" placeholder="Password" type="text">
+            <input id="regPass2" class="textbox col s12 center-align" placeholder="re-enter Password" type="text">
+            <input id="regEmail" class="textbox col s12 center-align" placeholder="Email" type="text">
+            <input id="regCurrGrade" class="textbox col s12 center-align" placeholder="Current Grade" type="number">
+			<div class="col s12 center-align" id="errormsgSignup" style="color:red;"></div>
+
+            <btn class="btn col s12 light-green lighten-1" id="sign_Up"><b>Sign Up</b></btn>
+
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close btn-flat col s12 center-align">close</a>
+		</div>
+    </div>
+	<!-- SignIn Modal to the main page -->
+	<div id="signinModal" class="modal">
+		<div class="modal-content row">
+
+                <div class="col s12 " style="font-size:1.5em; color:darkgray;"><b>Sign In</b></div>
+                <input id="logUser" class="textbox col s12 center-align" placeholder="Username" type="text">
+                <input id="logPass" class="textbox col s12 center-align" placeholder="Password" type="text">
+                <btn class="btn col s12 light-green lighten-3" id="Sign_In"><b>Sign In</b></btn>
+                <div class="col s12" style="height:1vh;"></div>
+
+                <div class="col s12 center-align" id="errormsgLogIn" style="color:red;"></div>
+		</div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close btn-flat col s12 center-align">close</a>
+		</div>
+    </div>
+</body>
+</html>
